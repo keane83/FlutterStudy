@@ -1,4 +1,15 @@
+//内容: APP的生命周期和Widget的生命周期
+//ListView: 简单使用
+
+// import 'dart:ffi';
 import 'package:flutter/material.dart';
+
+
+class ListItemDataType {
+  final IconData iconData;
+  final String title;
+  ListItemDataType(this.iconData,this.title);
+}
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +43,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page liujian123'),
+      debugShowCheckedModeBanner: false,
+      // home: MyAppNew()
+      home: const MyHomePage(title: 'Flutter Demo By LJ'),
     );
   }
 }
@@ -57,30 +70,40 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>{
 
+  //初始化时候调用
   @override
   void initState() {
     super.initState();
     debugPrint("initState");
   }
 
+  //彻底清除时候调用
   @override
   void dispose() {
     super.dispose();
     debugPrint("dispose");
   }
 
+  //当本widget在上层节点中的层级发上变化, 或者上层节点中存在widget类型变化时候调用
+  //widget树中，若节点的父级结构中的层级 或 父级结构中的任一节点的widget类型有变化，节点会调用didChangeDependencies；
+  //若仅仅是父级结构某一节点的widget的某些属性值变化，节点不会调用didChangeDependencies
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     debugPrint("didChangeDependencies");
   }
 
+  //属性配置变化,在父容器组件重绘时才调用该方法
+  //widget树中，若节点调用setState方法，节点本身不会触发didUpdateWidget，
+  //此节点的子节点 会 调用didUpdateWidget
   @override
   void didUpdateWidget(covariant MyHomePage oldWidget) {
     super.didUpdateWidget(oldWidget);
     debugPrint("didUpdateWidget");
   }
 
+
+  //非激活状态期的生命周期函数,Widget还没有别消除
   @override
   void deactivate() {
     super.deactivate();
@@ -93,31 +116,32 @@ class _MyHomePageState extends State<MyHomePage>{
     debugPrint("setState");
   }
 
-
-
-
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    var dataArray = [
+      ListItemDataType(Icons.account_balance, "Text"),
+      ListItemDataType(Icons.access_time, "Button"),
+      ListItemDataType(Icons.add_circle_sharp, "Image")
+    ];
+  
+    var myList = Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: ListView.builder(
+          itemCount: dataArray.length,
+          itemBuilder: (context,index) {
+            return ListTile(
+              leading: Icon(dataArray[index].iconData),
+              title: Text(dataArray[index].title, style: const TextStyle(color: Colors.pink)),
+              // child: Text("data"),
+              onTap: (){
+                debugPrint(index.toString());
+              },
+            );
+          },
+        )
+    );
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -128,98 +152,127 @@ class _MyHomePageState extends State<MyHomePage>{
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            MyWidget(testStr: '$_counter')
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      body: myList
     );
   }
 }
 
 
-class MyWidget extends StatefulWidget {
+class MyWidget extends StatefulWidget with WidgetsBindingObserver {
   final String? testStr;
   const MyWidget({super.key, this.testStr});
-
-
 
   @override
   State<MyWidget> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
 
+//任意层级Widget都可以加WidgetsBindingObserver 来监听App生命周期
+//1 with WidgetsBindingObserver
+//2 执行 WidgetsBinding.instance.addObserver(this);
+//3 @override void didChangeAppLifecycleState(AppLifecycleState state)
+//4 取消绑定 WidgetsBinding.instance.removeObserver(this);
+//detached
+class _MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
+
+  //监听App生命周期:3 @override void didChangeAppLifecycleState(AppLifecycleState state)
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    debugPrint("###APP Lift Cycle:"+state.toString());
+
+    //detached
+
+  }
+
+  //参考上面Widget的注释
   @override
   void initState() {
     super.initState();
     debugPrint("2 initState");
+
+    //监听App生命周期:2
+    WidgetsBinding.instance.addObserver(this);
+
   }
 
+  //参考上面Widget的注释
   @override
   void dispose() {
     super.dispose();
     debugPrint("2 dispose");
+
+    //监听App生命周期:4
+    WidgetsBinding.instance.removeObserver(this);
   }
 
+  //参考上面Widget的注释
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     debugPrint("2 didChangeDependencies");
   }
 
+  //参考上面Widget的注释
   @override
   void didUpdateWidget(covariant MyWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     debugPrint("2 didUpdateWidget");
   }
 
+  //参考上面Widget的注释
   @override
   void deactivate() {
     super.deactivate();
     debugPrint("2 deactivate");
   }
 
+  //参考上面Widget的注释
   @override
   void setState(VoidCallback fn) {
     super.setState(fn);
     debugPrint("2 setState");
   }
 
-
+  //参考上面Widget的注释
   @override
   Widget build(BuildContext context) {
     return Text(widget.testStr ?? '');
+  }
+}
+
+
+class MyAppNew extends StatelessWidget {
+  const MyAppNew({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const title = 'Basic List';
+
+    return MaterialApp(
+      title: title,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(title),
+        ),
+        body: ListView(
+          children: const <Widget>[
+            ListTile(
+              leading: Icon(Icons.map),
+              title: Text('Map'),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_album),
+              title: Text('Album'),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text('Phone'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
