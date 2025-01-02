@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       // home: MyAppNew()
-      home: const MyHomePage(title: 'Flutter Demo By LJ'),
+      home: const MyHomePage(title: 'Flutter Demo By LJ.'),
     );
   }
 }
