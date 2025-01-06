@@ -41,10 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ListItemDataType(
           Icons.add_circle_sharp, "Page View", PageRouter.myPageView),
       ListItemDataType(
-          Icons.add_circle_sharp, "Shared Preference", PageRouter.myPageView),
-      ListItemDataType(Icons.add_circle_sharp, "Dio", PageRouter.myPageView),
+          Icons.add_circle_sharp, "Shared Preference", PageRouter.mySharedPreference),
+      ListItemDataType(Icons.add_circle_sharp, "Dio", PageRouter.myDio),
       ListItemDataType(
-          Icons.add_circle_sharp, "Perminssion Handler", PageRouter.myPageView),
+          Icons.add_circle_sharp, "Perminssion Handler", PageRouter.myPermissionHandler),
     ];
 
     var myList = Center(

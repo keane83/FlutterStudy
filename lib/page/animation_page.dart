@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_first/basic_ui/text.dart';
 
 class MyAnimationPage extends StatefulWidget {
   const MyAnimationPage({super.key});

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_first/basic_ui/text.dart';
 
 class MyIndicatorPage extends StatelessWidget {
   const MyIndicatorPage({super.key});

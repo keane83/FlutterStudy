@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_first/basic_ui/text.dart';
 
 class MyPageViewPage extends StatefulWidget {
   const MyPageViewPage({super.key});
@@ -22,7 +21,7 @@ class _MyPageViewPageState extends State<MyPageViewPage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      body: Container(
+      body: SizedBox(
         height: 300,
         child: PageView(
           // reverse: true,

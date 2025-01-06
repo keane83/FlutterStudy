@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_first/basic_ui/list_view_build.dart';
 import 'package:flutter_first/basic_ui/list_view_delegate.dart';
-import 'package:flutter_first/basic_ui/list_view_normal.dart';
-import 'package:flutter_first/basic_ui/text.dart';
 
 class MyListViewPage extends StatelessWidget { 
   const MyListViewPage({super.key});
